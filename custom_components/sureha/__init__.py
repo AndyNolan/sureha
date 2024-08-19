@@ -225,10 +225,6 @@ class SurePetcareAPI:
                     "🐾 \x1b[38;2;255;26;102m·\x1b[0m arguments of wrong type: %s", error
                 )
 
-        async def update_pet_profile(self, pet_id: int, profile: int) -> None:
-            """Update the profile state of a specific pet."""
-            await self.surepy.sac.update_pet_profile(pet_id, profile)
-
         self.hass.services.async_register(
             DOMAIN,
             SERVICE_PET_LOCATION,
