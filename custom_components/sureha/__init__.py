@@ -280,11 +280,8 @@ class SurePetcareAPI:
             profile = call.data.get('profile')
 
             try:
-                surepy_entity = spc.surepy.get_entity(pet_id)
-                if surepy_entity and isinstance(surepy_entity, SurePet):
-                    await surepy_entity.update_profile(profile)
-                    await spc.coordinator.async_request_refresh()
-
+                await self.surepy.update_pet_profile(pet_id, profile)  
+                await self.surepy.coordinator.async_request_refresh()
             except ValueError as error:
                 _LOGGER.error(
                     "🐾 \x1b[38;2;255;26;102m·\x1b[0m Unable to update pet profile: %s", error

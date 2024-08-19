@@ -27,3 +27,6 @@ ATTR_LOCK_STATE = "lock_state"
 SERVICE_PET_LOCATION = "set_pet_location"
 ATTR_PET_ID = "pet_id"
 ATTR_WHERE = "where"
+
+# pet profile
+SERVICE_UPDATE_PET_PROFILE = "update_pet_profile"
