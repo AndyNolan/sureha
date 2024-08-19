@@ -33,3 +33,22 @@ set_pet_location:
       required: true
       example: "Inside"
       selector: { select: { options: ["Inside", "Outside"] } }
+update_pet_profile:
+  name: Set Pet Profile
+  description: Updates the individual profile state for a pet on the cat flap
+  fields:
+    pet_id:
+      name: Pet ID
+      description: ID of the pet to update
+      required: true
+      example: "1359829"
+      selector:
+        text:
+    profile:
+      name: Profile State
+      description: The new profile state for the pet
+      required: true
+      selector:
+        select:
+          options: ["2", "3"] 
+

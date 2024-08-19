@@ -167,6 +167,10 @@ class SurePetcareAPI:
         # elegant functions dict to choose the right function | idea by @janiversen
         await lock_states[state.lower()](flap_id)
 
+    async def update_pet_profile(self, pet_id: int, profile: int) -> None:
+        """Update the profile state of a specific pet."""
+        await self.surepy.sac.update_pet_profile(pet_id, profile)
+
     async def async_setup(self) -> bool:
         """Set up the Sure Petcare integration."""
 
@@ -221,6 +225,10 @@ class SurePetcareAPI:
                     "🐾 \x1b[38;2;255;26;102m·\x1b[0m arguments of wrong type: %s", error
                 )
 
+        async def update_pet_profile(self, pet_id: int, profile: int) -> None:
+            """Update the profile state of a specific pet."""
+            await self.surepy.sac.update_pet_profile(pet_id, profile)
+
         self.hass.services.async_register(
             DOMAIN,
             SERVICE_PET_LOCATION,
@@ -268,6 +276,32 @@ class SurePetcareAPI:
             SERVICE_SET_LOCK_STATE,
             handle_set_lock_state,
             schema=lock_state_service_schema,
+        )
+
+        async def handle_update_pet_profile(call: Any) -> None:
+            """Update the profile state of a specific pet."""
+            pet_id = call.data.get('pet_id')
+            profile = call.data.get('profile')
+
+            try:
+                surepy_entity = spc.surepy.get_entity(pet_id)
+                if surepy_entity and isinstance(surepy_entity, SurePet):
+                    await surepy_entity.update_profile(profile)
+                    await spc.coordinator.async_request_refresh()
+
+            except ValueError as error:
+                _LOGGER.error(
+                    "🐾 \x1b[38;2;255;26;102m·\x1b[0m Unable to update pet profile: %s", error
+                )
+
+        self.hass.services.async_register(
+            DOMAIN,
+            'update_pet_profile',
+            handle_update_pet_profile,
+            schema=vol.Schema({
+                vol.Required('pet_id'): cv.string,
+                vol.Required('profile'): cv.string,
+            })
         )
 
         return True
